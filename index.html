@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniVTAC: A Unified Simulation Platform for Visuo-Tactile Manipulation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'academic-blue': '#2563eb',
+                        'academic-dark': '#0f172a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .video-container {
+            position: relative;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            background-color: #000;
+        }
+        .video-wrapper video {
+            width: 100%;
+            margin-top: -15%; /* Crops approximately top ~100px equivalent */
+            margin-bottom: -1px; /* Remove potential gap */
+            display: block;
+        }
+        .video-label {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 4px 8px;
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 500;
+            z-index: 10;
+        }
+        .success-badge {
+            background-color: #dcfce7;
+            color: #166534;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            margin-left: 4px;
+            font-weight: 600;
+        }
+        .failure-badge {
+            background-color: #fee2e2;
+            color: #991b1b;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.65rem;
+            margin-left: 4px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 antialiased">
+    
+    <!-- Hero Section -->
+    <header class="bg-white py-12 border-b border-gray-100">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 leading-tight mb-4">
+                <span class="text-academic-blue">UniVTAC</span>: A Unified Simulation Platform for Visuo-Tactile Manipulation Data Generation, Learning, and Benchmarking
+            </h1>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-wrap justify-center gap-3 mb-8">
+                <a href="#" class="inline-flex items-center px-4 py-2 bg-academic-blue text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Paper (PDF)
+                </a>
+                <a href="#" class="inline-flex items-center px-4 py-2 bg-white text-slate-500 text-sm font-medium rounded-md border border-gray-300 cursor-not-allowed hover:bg-gray-50 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                    Code (Coming Soon)
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Teaser Image -->
+    <section class="py-8 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex justify-center">
+                <img src="teaser.svg" alt="UniVTAC Teaser" class="w-full max-w-5xl rounded-lg shadow-md">
+            </div>
+        </div>
+    </section>
+
+    <!-- Overview (formerly Abstract) -->
+    <section class="py-10 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">Overview</h2>
+            
+            <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                Visuo-tactile perception is critical for contact-rich manipulation, enabling robots to handle intricate tasks where vision alone is insufficient due to occlusion or lighting conditions. However, progress has been significantly hindered by the scarcity of diverse tactile datasets and the lack of unified evaluation platforms. Existing solutions often struggle with limited sensor support or non-standardized benchmarks.
+            </p>
+            <p class="text-slate-700 leading-relaxed mb-6 text-lg">
+                We present <strong>UniVTAC</strong>, a comprehensive solution addressing these challenges. By integrating high-fidelity simulation with a robust representation learning framework, UniVTAC facilitates the development of generalizable tactile policies that transfer effectively to the real world. Our method achieves <strong>+17.1%</strong> success rate on simulated benchmarks and <strong>+25%</strong> in real-world sim-to-real transfer compared to vision-only baselines.
+            </p>
+
+            <!-- Contribution Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Platform Card -->
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-600 rounded-full mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">UniVTAC Platform</h3>
+                    <p class="text-slate-800 text-base">A unified simulation environment supporting varied sensors (GelSight, ViTai, Xense) with intuitive APIs for scalable, contact-rich data generation.</p>
+                </div>
+
+                <!-- Encoder Card -->
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-600 rounded-full mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">UniVTAC Encoder</h3>
+                    <p class="text-slate-800 text-base">A pretrained tactile representation model learning shape, contact dynamics, and pose via multi-pathway supervision on synthetic data.</p>
+                </div>
+
+                <!-- Benchmark Card -->
+                <div class="bg-blue-50 border border-blue-100 rounded-lg p-5 hover:shadow-md transition-shadow">
+                    <div class="flex items-center justify-center w-10 h-10 bg-blue-100 text-blue-600 rounded-full mb-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">UniVTAC Benchmark</h3>
+                    <p class="text-slate-800 text-base">A systematic suite of 8 diverse manipulation tasks (pose reasoning, shape perception, insertion) to evaluate tactile policies.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UniVTAC Platform -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">UniVTAC Platform</h2>
+            
+            <p class="text-slate-700 leading-relaxed mb-8 text-base">
+                The UniVTAC platform is built to democratize visuo-tactile research. It offers a scalable, GPU-accelerated simulation environment capable of generating massive amounts of labeled tactile data. Unlike previous works that focus on single sensors, our platform provides unified support for three distinct types of tactile sensors: <strong>GelSight Mini</strong> (optical), <strong>ViTai GF225</strong> (soft gel-based), and <strong>Xense WS</strong> (force/torque), ensuring broad applicability across different hardware setups.
+            </p>
+
+            <!-- Pipeline Figure -->
+            <figure class="mb-10 bg-white p-2 rounded-lg border border-gray-200 shadow-sm">
+                <img src="pipeline.svg" alt="UniVTAC Data Generation Pipeline" class="w-full h-auto">
+                <figcaption class="mt-2 text-slate-600 text-sm italic text-center">
+                    Figure 1: The UniVTAC data generation pipeline. The system automates the scene setup, object randomization, and multi-modal data collection (RGB, Depth, Tactile), streamlining the training process.
+                </figcaption>
+            </figure>
+
+            <!-- Sensors Grid -->
+            <div class="mb-10">
+                <h3 class="text-xl font-semibold text-slate-800 mb-4">Supported Tactile Sensors</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col">
+                        <img src="gsmini.png" alt="GelSight Mini" class="mb-3 rounded shadow-sm mx-auto" style="height: 200px;">
+                        <span class="font-bold text-lg text-academic-blue text-center">GelSight Mini</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col">
+                        <img src="gf225.png" alt="ViTai GF225" class="mb-3 rounded shadow-sm mx-auto" style="height: 200px;">
+                        <span class="font-bold text-lg text-academic-blue text-center">ViTai GF225</span>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm flex flex-col">
+                        <img src="xensews.png" alt="Xense WS" class="mb-3 rounded shadow-sm mx-auto" style="height: 200px;">
+                        <span class="font-bold text-lg text-academic-blue text-center">Xense WS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- APIs Grid -->
+            <div>
+                <h3 class="text-xl font-semibold text-slate-800 mb-4">Automated Manipulation APIs</h3>
+                <p class="text-slate-700 leading-relaxed mb-6 text-base">
+                    To further lower the barrier to entry, UniVTAC provides a suite of high-level control APIs. These primitives allow researchers to script complex manipulation sequences without dealing with low-level physics integration.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="font-bold text-slate-900 text-lg mb-2">Grasp</div>
+                        <p class="text-base text-slate-800 leading-snug">Adaptive velocity control based on depth feedback to prevent clipping.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="font-bold text-slate-900 text-lg mb-2">Move</div>
+                        <p class="text-base text-slate-800 leading-snug">Collision-free trajectory generation via cuRobo.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="font-bold text-slate-900 text-lg mb-2">Place</div>
+                        <p class="text-base text-slate-800 leading-snug">Stable object placement using trajectory optimization.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="font-bold text-slate-900 text-lg mb-2">Probe</div>
+                        <p class="text-base text-slate-800 leading-snug">Safe contact initiation without penetration for readings.</p>
+                    </div>
+                    <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                        <div class="font-bold text-slate-900 text-lg mb-2">Rotate</div>
+                        <p class="text-base text-slate-800 leading-snug">Small-scale rotations to induce shear force patterns.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- UniVTAC Encoder -->
+    <section class="py-12 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">UniVTAC Encoder</h2>
+            
+            <p class="text-slate-700 leading-relaxed mb-8 text-base">
+                The core innovation of our learning framework is the UniVTAC Encoder. We employ a ResNet-18 backbone initialized with ImageNet weights, which is then fine-tuned using a multi-task objective. By supervising the model on three distinct pathways—Shape, Contact, and Pose—we ensure that the learned representations are not only discriminative for geometry but also aware of physical dynamics and spatial configuration. This disentanglement is crucial for generalization across different objects and tasks.
+            </p>
+
+            <!-- Encoder Architecture Figure -->
+            <figure class="mb-8">
+                <img src="encoder.svg" alt="UniVTAC Encoder Architecture" class="w-full h-auto max-w-4xl mx-auto">
+                <figcaption class="mt-2 text-slate-600 text-sm italic text-center">
+                    Figure 2: Multi-pathway encoder architecture. The network processes tactile images to simultaneously reconstruct sensor views, estimate contact forces, and predict object pose.
+                </figcaption>
+            </figure>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-10">
+                <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-academic-blue text-lg mb-3">Shape Perception</h4>
+                    <p class="text-base text-slate-900 leading-relaxed">Focuses on recovering the intrinsic geometry of the object. It uses reconstruction supervision to disentangle object shape from sensor deformation artifacts.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-academic-blue text-lg mb-3">Contact Perception</h4>
+                    <p class="text-base text-slate-900 leading-relaxed">Models the local interaction dynamics. This pathway is trained to predict surface deformation and marker flow, which are direct proxies for force and slip events.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="font-bold text-academic-blue text-lg mb-3">Pose Perception</h4>
+                    <p class="text-base text-slate-900 leading-relaxed">Anchors the tactile signals in the global metric space by regressing the pose of the object relative to the sensor, enabling precise manipulation.</p>
+                </div>
+            </div>
+
+            <p class="text-slate-700 leading-relaxed mb-6 text-base">
+                The effectiveness of our encoder is visualized below. The model successfully reconstructs high-fidelity tactile images and accurately infers contact areas, verifying that it has captured the underlying physical properties of the interaction.
+            </p>
+
+            <!-- Reconstruction Figure -->
+            <figure>
+                <img src="reconstruction.svg" alt="Tactile Reconstruction Results" class="w-full h-auto max-w-4xl mx-auto">
+                <figcaption class="mt-2 text-slate-600 text-sm italic text-center">
+                    Figure 3: Qualitative results of tactile image reconstruction. Top row: Input tactile images. Bottom row: Reconstruction results from the Shape Perception pathway.
+                </figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- UniVTAC Benchmark -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">UniVTAC Benchmark</h2>
+            
+            <p class="text-slate-700 leading-relaxed mb-8 text-base">
+                To rigorously evaluate tactile policies, we establish the UniVTAC Benchmark, consisting of 8 varied tasks sorted by complexity. These tasks range from simple object classification to intricate insertion operations that require continuous tactile feedback.
+            </p>
+
+            <!-- Tasks Figure -->
+            <figure class="mb-8">
+                <img src="tasks.svg" alt="UniVTAC Benchmark Tasks" class="w-full h-auto max-w-4xl mx-auto">
+                <figcaption class="mt-2 text-slate-600 text-sm italic text-center">
+                    Figure 4: The 8 benchmark tasks. Tasks are categorized into Pose Reasoning, Shape Perception, and Contact-Rich Interaction.
+                </figcaption>
+            </figure>
+
+            <!-- Task Categories Compact -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Pose Reasoning -->
+                <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                    <h4 class="font-bold text-slate-900 text-lg mb-3 pb-2 border-b border-gray-100">Pose Reasoning</h4>
+                    <p class="text-slate-700 text-base mb-4">Tasks requiring the robot to infer the precise orientation and position of held objects using only tactile feedback.</p>
+                    <ul class="list-disc list-inside text-slate-800 text-base space-y-1">
+                        <li>Lift Bottle</li>
+                        <li>Lift Can</li>
+                        <li>Put Bottle in Shelf</li>
+                    </ul>
+                </div>
+
+                <!-- Shape Perception -->
+                <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                    <h4 class="font-bold text-slate-900 text-lg mb-3 pb-2 border-b border-gray-100">Shape Perception</h4>
+                    <p class="text-slate-700 text-base mb-4">Focuses on differentiating objects based on their local geometric features extracted during exploration.</p>
+                    <ul class="list-disc list-inside text-slate-800 text-base space-y-1">
+                        <li>Grasp Classify</li>
+                    </ul>
+                </div>
+
+                <!-- Contact-Rich Interaction -->
+                <div class="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+                    <h4 class="font-bold text-slate-900 text-lg mb-3 pb-2 border-b border-gray-100">Contact-Rich Interaction</h4>
+                    <p class="text-slate-700 text-base mb-4">Complex dynamics where visual occlusion is high. The policy must adjust actions in real-time based on contact forces.</p>
+                    <ul class="list-disc list-inside text-slate-800 text-base space-y-1">
+                        <li>Insert Hole</li>
+                        <li>Insert Tube</li>
+                        <li>Insert HDMI</li>
+                        <li>Pull Out Key</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulation Experiments -->
+    <section class="py-12 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">Simulation Experiments</h2>
+            
+            <p class="text-slate-700 leading-relaxed mb-8 text-base">
+                We conducted extensive evaluations using Action Chunking Transformers (ACT) and VITaL policies. The results demonstrate that incorporating the UniVTAC encoder consistently boosts performance. In particular, for high-precision tasks like 'Insert Tube' and 'Insert HDMI', the tactile feedback is indispensable, providing a significant advantage over vision-only baselines.
+            </p>
+
+            <div class="overflow-x-auto rounded-lg border border-gray-200">
+                <table class="min-w-full divide-y divide-gray-200 text-sm">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-bold text-gray-500 uppercase tracking-wider">Method</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Lift Bottle</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Pull-out Key</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Lift Can</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Put Bottle</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Insert Hole</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Insert HDMI</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Insert Tube</th>
+                            <th class="px-4 py-3 text-center text-gray-500">Grasp Classify</th>
+                            <th class="px-4 py-3 text-center font-bold text-gray-700">Avg</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-4 py-3 font-medium text-gray-900">ACT (Vision Only)</td>
+                            <td class="px-4 py-3 text-center text-gray-600">42.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">28.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">20.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">28.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">19.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">15.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">45.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">50.0%</td>
+                            <td class="px-4 py-3 text-center font-bold text-gray-700">30.9%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-4 py-3 font-medium text-gray-900">VITaL</td>
+                            <td class="px-4 py-3 text-center text-gray-600">72.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">47.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">8.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">32.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">25.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">6.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">34.0%</td>
+                            <td class="px-4 py-3 text-center text-gray-600">100.0%</td>
+                            <td class="px-4 py-3 text-center font-bold text-gray-700">40.5%</td>
+                        </tr>
+                        <tr class="bg-blue-50">
+                            <td class="px-4 py-3 font-bold text-academic-blue">ACT + UniVTAC</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">71.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">46.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">29.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">31.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">24.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">28.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">56.0%</td>
+                            <td class="px-4 py-3 text-center font-semibold text-blue-900">99.0%</td>
+                            <td class="px-4 py-3 text-center font-bold text-academic-blue">48.0%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-World Experiments -->
+    <section class="py-12 bg-gray-50">
+        <div class="max-w-6xl mx-auto px-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6 border-b pb-2">Real-World Experiments</h2>
+
+            <p class="text-slate-700 leading-relaxed mb-6 text-base">
+                Validating simulation results on real hardware is the ultimate test of any tactile learning framework. We deployed our trained policies on a real-world system comprising a Tianji Marvin robot equipped with ViTai GF225 sensors. The experimental setup mirrors the simulation environments, specifically targeting the 'Insert Tube', 'Insert USB', and 'Bottle Upright' tasks which involve significant contact uncertainty.
+            </p>
+            <p class="text-slate-700 leading-relaxed mb-10 text-base">
+                Figure 5 details our physical rig and the objects used. Despite the inevitable domain gap between simulated and real tactile readings, our UniVTAC encoder—trained purely on synthetic data—demonstrated remarkable robustness. Figure 6 highlights key frames from successful execution sequences, showing how the robot utilizes tactile feedback to correct 6D pose errors during insertion.
+            </p>
+
+            <!-- Figures 5 & 6 Stacked (Standalone) -->
+            <div class="flex flex-col gap-10 mb-12 items-center">
+                <figure class="w-full max-w-4xl">
+                    <img src="real_world_tasks.svg" alt="Real World Task Setup" class="w-full h-auto rounded border border-gray-200 shadow-sm">
+                    <figcaption class="mt-2 text-slate-600 text-sm italic text-center">
+                        Figure 5: Real-world experimental setup. A Tianji Marvin arm is equipped with ViTai sensors to perform manipulation tasks.
+                    </figcaption>
+                </figure>
+                <figure class="w-full max-w-4xl">
+                    <img src="real_world_key_frame.svg" alt="Real World Key Frames" class="w-full h-auto rounded border border-gray-200 shadow-sm">
+                    <figcaption class="mt-2 text-slate-600 text-sm italic text-center">
+                        Figure 6: Key interaction frames from real-world experiments. The tactile feedback enables the robot to make micro-adjustments for successful insertion.
+                    </figcaption>
+                </figure>
+            </div>
+
+            <!-- Quantitative Results Table -->
+            <div class="max-w-2xl mx-auto mb-12 overflow-hidden rounded-lg border border-slate-200 shadow-sm">
+                <table class="min-w-full divide-y divide-slate-200 bg-white">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase">Task</th>
+                            <th class="px-6 py-3 text-center text-xs font-bold text-slate-500 uppercase">Vision Only</th>
+                            <th class="px-6 py-3 text-center text-xs font-bold text-academic-blue uppercase">Vision + UniVTAC</th>
+                            <th class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase">Gain</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr>
+                            <td class="px-6 py-3 text-sm font-medium text-slate-900">Insert Tube</td>
+                            <td class="px-6 py-3 text-sm text-center text-slate-500">55.0%</td>
+                            <td class="px-6 py-3 text-sm text-center font-bold text-academic-blue">85.0%</td>
+                            <td class="px-6 py-3 text-sm text-right text-green-600 font-semibold">+30.0%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-3 text-sm font-medium text-slate-900">Insert USB</td>
+                            <td class="px-6 py-3 text-sm text-center text-slate-500">15.0%</td>
+                            <td class="px-6 py-3 text-sm text-center font-bold text-academic-blue">25.0%</td>
+                            <td class="px-6 py-3 text-sm text-right text-green-600 font-semibold">+10.0%</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-3 text-sm font-medium text-slate-900">Bottle Upright</td>
+                            <td class="px-6 py-3 text-sm text-center text-slate-500">60.0%</td>
+                            <td class="px-6 py-3 text-sm text-center font-bold text-academic-blue">95.0%</td>
+                            <td class="px-6 py-3 text-sm text-right text-green-600 font-semibold">+35.0%</td>
+                        </tr>
+                        <tr class="bg-gray-50">
+                            <td class="px-6 py-3 text-sm font-bold text-slate-900">Average</td>
+                            <td class="px-6 py-3 text-sm text-center font-semibold text-slate-700">43.3%</td>
+                            <td class="px-6 py-3 text-sm text-center font-bold text-academic-blue">68.3%</td>
+                            <td class="px-6 py-3 text-sm text-right text-green-700 font-bold">+25.0%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="text-slate-700 leading-relaxed mb-6 text-base text-center">
+                Below are video demonstrations comparing our UniVTAC-enhanced policy against the vision-only baseline.
+            </p>
+
+            <!-- Video Grid (3 Columns x 2 Rows) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-4 md:px-8">
+                <!-- Col 1: Insert Tube -->
+                <div class="space-y-5">
+                    <h3 class="font-bold text-slate-800 text-sm text-center border-b pb-2">Insert Tube</h3>
+                    
+                    <!-- Row 1: Tactile (Success) -->
+                    <div class="video-container video-wrapper shadow-sm">
+                        <video autoplay loop muted playsinline>
+                            <source src="insert tube-加触觉-成功.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-label flex justify-between w-full">
+                            <span>UniVTAC</span>
+                            <span class="success-badge">Success</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 2: Vision (Failure) -->
+                    <div class="video-container video-wrapper shadow-sm">
+                        <video autoplay loop muted playsinline>
+                            <source src="insert tube-不加触觉-失败.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-label flex justify-between w-full">
+                            <span>Vision Only</span>
+                            <span class="failure-badge">Failure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Col 2: Insert USB -->
+                <div class="space-y-5">
+                    <h3 class="font-bold text-slate-800 text-sm text-center border-b pb-2">Insert USB</h3>
+                    
+                    <div class="video-container video-wrapper shadow-sm">
+                        <video autoplay loop muted playsinline>
+                            <source src="insert USB-加触觉-成功.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-label flex justify-between w-full">
+                            <span>UniVTAC</span>
+                            <span class="success-badge">Success</span>
+                        </div>
+                    </div>
+                    
+                    <div class="video-container video-wrapper shadow-sm">
+                        <video autoplay loop muted playsinline>
+                            <source src="insert USB-不加触觉-失败.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-label flex justify-between w-full">
+                            <span>Vision Only</span>
+                            <span class="failure-badge">Failure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Col 3: Bottle Upright -->
+                <div class="space-y-5">
+                    <h3 class="font-bold text-slate-800 text-sm text-center border-b pb-2">Bottle Upright</h3>
+                    
+                    <div class="video-container video-wrapper shadow-sm">
+                        <video autoplay loop muted playsinline>
+                            <source src="lift bottle-加触觉-成功.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-label flex justify-between w-full">
+                            <span>UniVTAC</span>
+                            <span class="success-badge">Success</span>
+                        </div>
+                    </div>
+                    
+                    <div class="video-container video-wrapper shadow-sm">
+                        <video autoplay loop muted playsinline>
+                            <source src="lift bottle-不加触觉-失败.mp4" type="video/mp4">
+                        </video>
+                        <div class="video-label flex justify-between w-full">
+                            <span>Vision Only</span>
+                            <span class="failure-badge">Failure</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+
+    <!-- BibTeX Section -->
+    <section class="py-12 bg-white border-t border-gray-200">
+        <div class="max-w-4xl mx-auto px-6">
+            <h2 class="text-lg font-semibold text-slate-900 mb-4">BibTeX</h2>
+            <div class="bg-gray-800 rounded-lg p-4 overflow-x-auto shadow-inner">
+<pre class="text-gray-300 text-xs font-mono">@article{univtac2025,
+  title={UniVTAC: A Unified Simulation Platform for Visuo-Tactile Manipulation Data Generation, Learning, and Benchmarking}, 
+  author={Anonymous Author(s)},
+  journal={Anonymous Submission},
+  year={2025},
+  note={Under Review}
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-6 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <p class="text-slate-500 text-xs">
+                UniVTAC: A Unified Simulation Platform for Visuo-Tactile Manipulation
+                <br>
+                Anonymous Submission — Double Blind Review
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
