@@ -126,7 +126,7 @@
                     </svg>
                     Paper
                 </a>
-                <a href="https://github.com/univtac/UniVTAC" class="inline-flex items-center px-4 py-2 bg-white text-slate-500 text-sm font-medium rounded-md border border-gray-300 hover:bg-gray-50 transition-colors">
+                <a href="https://github.com/univtac/UniVTAC" class="inline-flex items-center px-4 py-2 bg-academic-blue text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
                     </svg>
@@ -136,6 +136,9 @@
                     <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="6" rx="8" ry="3"></ellipse><path d="M4 6v6a8 3 0 0 0 16 0V6"></path><path d="M4 12v6a8 3 0 0 0 16 0v-6"></path></g></svg>
                     Dataset
                 </a>
+                <button onclick="openWechatModal()" class="inline-flex items-center px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 transition-colors shadow-sm">
+                    WeChat Group
+                </button>
             </div>
         </div>
     </header>
@@ -598,6 +601,41 @@
             </div>
         </div>
     </section>
+
+    <!-- WeChat Modal -->
+    <div id="wechatModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden" onclick="closeWechatModal(event)">
+        <div class="bg-white rounded-lg p-6 max-w-md mx-4 relative" onclick="event.stopPropagation()">
+            <button onclick="closeWechatModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <h3 class="text-lg font-semibold text-slate-900 mb-4 text-center">Join Our WeChat Group</h3>
+            <img src="https://box.nju.edu.cn/seafhttp/f/fc1021a908ff49309f22/?op=view" alt="WeChat Group QR Code" class="w-full rounded-lg shadow-sm">
+            <p class="text-sm text-slate-500 mt-4 text-center">Scan the QR code to join our WeChat group</p>
+        </div>
+    </div>
+
+    <script>
+        function openWechatModal() {
+            document.getElementById('wechatModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeWechatModal(event) {
+            if (!event || event.target === document.getElementById('wechatModal')) {
+                document.getElementById('wechatModal').classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeWechatModal();
+            }
+        });
+    </script>
 
     <!-- Footer -->
     <footer class="py-6 bg-gray-50 border-t border-gray-200">
